@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,12 +28,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hnq40.myapplication.Common.Common;
 import com.hnq40.myapplication.Interface.ItemClickListener;
+import com.hnq40.myapplication.Interface.NavigationItemSelectedListener;
 import com.hnq40.myapplication.Model.Category;
 import com.hnq40.myapplication.R;
 import com.hnq40.myapplication.ViewHolder.MenuViewHolder;
@@ -63,11 +68,13 @@ public class Home extends AppCompatActivity {
         setSupportActionBar(toolbar);
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
-        binding.appBarHome.toolbar.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent cartIntent = new Intent(Home.this, Cart.class);
+                startActivity(cartIntent);
+                finish();
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -100,8 +107,7 @@ public class Home extends AppCompatActivity {
                         .setQuery(category, Category.class)
                         .build();
 
-         adapter =
-                new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+         adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
                     @Override
                     public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         View view = LayoutInflater.from(parent.getContext())
@@ -121,7 +127,6 @@ public class Home extends AppCompatActivity {
                                 Intent foodList = new Intent(Home.this, FoodList.class);
                                 foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
                                 startActivity(foodList);
-                                finish();
                             }
                         });
                     }
@@ -145,4 +150,9 @@ public class Home extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    public class Home extends AppCompatActivity implements NavigationItemSelectedListener {
+        
+    }
+
 }

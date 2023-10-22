@@ -4,6 +4,9 @@ import static com.hnq40.myapplication.R.layout.food_item;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -58,14 +62,12 @@ public class FoodList extends AppCompatActivity {
     }
 
     private void loadListFood(String categoryId) {
-        FirebaseRecyclerOptions.Builder<Food> foodBuilder = new FirebaseRecyclerOptions.Builder<Food>();
-        foodBuilder.setQuery(foodList.orderByChild("MenuId").equalTo(categoryId), Food.class);
         FirebaseRecyclerOptions<Food> options =
-                foodBuilder
+                new FirebaseRecyclerOptions.Builder<Food>()
+                        .setQuery(foodList.orderByChild("MenuId").equalTo(categoryId), Food.class)
                         .build();
 
-        adapter =
-                new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
                     @Override
                     public FoodViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         View view = LayoutInflater.from(parent.getContext())
@@ -76,17 +78,15 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(FoodViewHolder viewHolder, int position, Food model) {
                         viewHolder.food_name.setText(model.getName());
-                        Picasso.get()
-                                .load(model.getImage())
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                .networkPolicy(NetworkPolicy.NO_CACHE)
-                                .into(viewHolder.food_image);
+                        Picasso.get().load(model.getImage()).into(viewHolder.food_image);
 
                         final Food local = model;
                         viewHolder.setItemClickListener(new ItemClickListener() {
                             @Override
                             public void onClick(View view, int position, boolean isLongClick) {
-                                Toast.makeText(FoodList.this, "" + local.getName(), Toast.LENGTH_SHORT).show();
+                                Intent foodDetail = new Intent(FoodList.this, FoodDetail.class);
+                                foodDetail.putExtra("FoodId", adapter.getRef(position).getKey());
+                                startActivity(foodDetail);
                             }
                         });
                     }

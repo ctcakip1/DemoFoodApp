@@ -28,6 +28,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:backgroundTint="@android:color/white"
-        android:src="@drawable/baseline_shopping_cart_24"/>
+        android:src="@drawable/baseline_shopping_cart_24"
+        android:contentDescription="TODO" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

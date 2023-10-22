@@ -27,13 +27,26 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
     }
     buildFeatures {
         viewBinding true
     }
 }
+tasks.withType(JavaCompile).configureEach{options.fork = true
+    options.forkOptions.jvmArgs +=[
+            '--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+            '--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+            '--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED']}
 
 dependencies {
+    implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
+    implementation("org.greenrobot:eventbus:3.3.1")
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    implementation 'com.nex3z:notification-badge:1.0.4'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.firebaseui:firebase-ui-database:8.0.2'
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
